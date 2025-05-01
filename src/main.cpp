@@ -35,6 +35,8 @@ int main() {
   std::cout << "Press [Enter] to play sound. Ctrl+C to quit.\n";
   std::string line;
 
+  voiceManager->play(buffer, 0.2f, true);
+
   float g = 1.0f;
   while (std::getline(std::cin, line)) {
     voiceManager->play(buffer, g);

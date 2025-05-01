@@ -5,10 +5,11 @@
 
 namespace audio {
 
-void VoiceManager::play(std::shared_ptr<SoundBuffer> buffer, float gain) {
+void VoiceManager::play(std::shared_ptr<SoundBuffer> buffer, float gain, bool looping) {
   std::lock_guard lock(_mutex);
   auto voice = std::make_unique<Voice>(std::move(buffer));
   voice->setGain(gain);
+  voice->setLooping(looping);
   _voices.emplace_back(std::move(voice));
 }
 

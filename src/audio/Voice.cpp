@@ -11,27 +11,27 @@ bool Voice::isFinished() const {
 }
 
 void Voice::mix(float* out, uint32_t frameCount) {
-  if (isFinished()) {
-    std::memset(out, 0, sizeof(float) * frameCount * _buffer->channels());
-    return;
-  }
+  if (isFinished()) return;
 
   const float* data = _buffer->data();
   uint32_t channels = _buffer->channels();
   size_t totalFrames = _buffer->totalFrames();
 
   for (uint32_t i = 0; i < frameCount; ++i) {
-    for (uint32_t ch = 0; ch < channels; ++ch) {
-      size_t sampleIndex = (_cursor + i) * channels + ch;
-      if (_cursor + i < totalFrames) {
-        out[i * channels + ch] += _gain * data[sampleIndex];
+    if (_cursor >= totalFrames) {
+      if (_looping) {
+        _cursor = 0;
       } else {
-        out[i * channels + ch] += 0.0f;
+        break;
       }
     }
-  }
 
-  _cursor += frameCount;
+    for (uint32_t ch = 0; ch < channels; ++ch) {
+      size_t sampleIndex = _cursor * channels + ch;
+      out[i * channels + ch] += _gain * data[sampleIndex];
+    }
+    _cursor++;
+  }
 }
 
 }  // namespace audio
