@@ -16,7 +16,7 @@ FetchContent_MakeAvailable(miniaudio)
 
 add_executable(audio_demo
   src/main.cpp
-  src/miniaudio_impl.cpp
+  src/audio/miniaudio_impl.cpp
   src/audio/SoundBuffer.cpp
   src/audio/Voice.cpp
   src/audio/VoiceManager.cpp
