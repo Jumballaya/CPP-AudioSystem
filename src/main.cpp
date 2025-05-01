@@ -6,38 +6,36 @@
 
 #include "audio/SoundBuffer.hpp"
 #include "audio/Voice.hpp"
+#include "audio/VoiceManager.hpp"
 
-std::unique_ptr<audio::Voice> voice;
+std::unique_ptr<audio::VoiceManager> voiceManager;
+std::shared_ptr<audio::SoundBuffer> buffer;
 
 int main() {
-  auto buffer = audio::SoundBuffer::loadWav("assets/acid-wool-cloth.wav");
-  voice = std::make_unique<audio::Voice>(buffer);
+  buffer = audio::SoundBuffer::loadWav("assets/acid-wool-cloth.wav");
+  voiceManager = std::make_unique<audio::VoiceManager>();
 
-  // Audio callback
-  ma_device_config deviceConfig = ma_device_config_init(ma_device_type_playback);
-  deviceConfig.playback.format = ma_format_f32;
-  deviceConfig.playback.channels = buffer->channels();
-  deviceConfig.sampleRate = buffer->sampleRate();
-  deviceConfig.dataCallback = [](ma_device* device, void* output, const void*, ma_uint32 frameCount) {
-    float* out = static_cast<float*>(output);
-    std::memset(out, 0, sizeof(float) * frameCount * voice->buffer()->channels());  // clear first
-    if (voice && !voice->isFinished()) {
-      voice->mix(out, frameCount);
-    }
+  ma_device_config config = ma_device_config_init(ma_device_type_playback);
+  config.playback.format = ma_format_f32;
+  config.playback.channels = buffer->channels();
+  config.sampleRate = buffer->sampleRate();
+  config.dataCallback = [](ma_device*, void* output, const void*, ma_uint32 frameCount) {
+    voiceManager->mix(static_cast<float*>(output), frameCount, buffer->channels());
   };
-  deviceConfig.pUserData = nullptr;
+  config.pUserData = nullptr;
 
   ma_device device;
-  if (ma_device_init(nullptr, &deviceConfig, &device) != MA_SUCCESS) {
-    std::cerr << "Failed to init device\n";
+  if (ma_device_init(nullptr, &config, &device) != MA_SUCCESS) {
+    std::cerr << "Failed to init device" << std::endl;
     return 1;
   }
 
   ma_device_start(&device);
-  std::cout << "Playing..." << std::endl;
 
-  while (!voice->isFinished()) {
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+  std::cout << "Press [Enter] to play sound. Ctrl+C to quit.\n";
+  std::string line;
+  while (std::getline(std::cin, line)) {
+    voiceManager->play(buffer);
   }
 
   ma_device_uninit(&device);

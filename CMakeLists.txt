@@ -19,6 +19,7 @@ add_executable(audio_demo
   src/miniaudio_impl.cpp
   src/audio/SoundBuffer.cpp
   src/audio/Voice.cpp
+  src/audio/VoiceManager.cpp
 )
 
 target_include_directories(audio_demo PRIVATE ${miniaudio_SOURCE_DIR})
