@@ -15,7 +15,7 @@ int main() {
 
   std::cout << "Looping sound. Press Enter to play one-shot. Type 'fade' to fade out.\n";
 
-  audio.play(buffer, 0.7f, true);  // looping ambient
+  audio.play(buffer, 0.7f, true);
 
   std::string line;
   while (std::getline(std::cin, line)) {
