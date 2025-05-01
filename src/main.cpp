@@ -6,9 +6,6 @@
 
 #include "audio/audio.hpp"
 
-std::unique_ptr<audio::VoiceManager> voiceManager;
-std::shared_ptr<audio::SoundBuffer> buffer;
-
 int main() {
   audio::AudioSystem audio;
   auto buffer = audio::SoundBuffer::loadWav("assets/acid-wool-cloth.wav");
