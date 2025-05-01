@@ -35,13 +35,19 @@ int main() {
   std::cout << "Press [Enter] to play sound. Ctrl+C to quit.\n";
   std::string line;
 
-  voiceManager->play(buffer, 0.2f, true);
-
+  int count = 0;
   float g = 1.0f;
   while (std::getline(std::cin, line)) {
     voiceManager->play(buffer, g);
     g *= 0.8f;
+
+    if (count >= 10) break;
+    count++;
   }
+
+  std::cout << "Exiting..." << std::endl;
+  voiceManager->fadeOutAll(48000 * 0.5);  // 0.5 second fade
+  std::this_thread::sleep_for(std::chrono::seconds(1));
 
   ma_device_uninit(&device);
   return 0;

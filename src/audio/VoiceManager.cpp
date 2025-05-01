@@ -32,4 +32,12 @@ void VoiceManager::mix(float* output, uint32_t frameCount, uint32_t channels) {
                 _voices.end());
 }
 
+void VoiceManager::fadeOutAll(uint32_t durationFrames) {
+  std::lock_guard lock(_mutex);
+  for (auto& v : _voices) {
+    if (!v->isFinished()) {
+      v->fadeOut(durationFrames);
+    }
+  }
+}
 }  // namespace audio
