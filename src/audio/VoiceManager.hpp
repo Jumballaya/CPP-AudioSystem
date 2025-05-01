@@ -10,7 +10,7 @@
 namespace audio {
 class VoiceManager {
  public:
-  void play(std::shared_ptr<SoundBuffer> buffer);
+  void play(std::shared_ptr<SoundBuffer> buffer, float gain = 1.0f);
   void mix(float* output, uint32_t frameCount, uint32_t channels);
 
  private:

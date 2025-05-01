@@ -12,12 +12,14 @@ class Voice {
 
   bool isFinished() const;
   void mix(float* out, uint32_t frameCount);
-  std::shared_ptr<SoundBuffer> buffer() const {
-    return _buffer;
-  }
+
+  std::shared_ptr<SoundBuffer> buffer() const { return _buffer; }
+  void setGain(float gain) { _gain = gain; }
+  float gain() const { return _gain; }
 
  private:
   std::shared_ptr<SoundBuffer> _buffer;
   size_t _cursor = 0;
+  float _gain = 1.0f;
 };
 }  // namespace audio

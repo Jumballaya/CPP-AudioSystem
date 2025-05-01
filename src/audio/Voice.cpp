@@ -24,7 +24,7 @@ void Voice::mix(float* out, uint32_t frameCount) {
     for (uint32_t ch = 0; ch < channels; ++ch) {
       size_t sampleIndex = (_cursor + i) * channels + ch;
       if (_cursor + i < totalFrames) {
-        out[i * channels + ch] += data[sampleIndex];
+        out[i * channels + ch] += _gain * data[sampleIndex];
       } else {
         out[i * channels + ch] += 0.0f;
       }

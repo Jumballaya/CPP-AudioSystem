@@ -5,9 +5,11 @@
 
 namespace audio {
 
-void VoiceManager::play(std::shared_ptr<SoundBuffer> buffer) {
+void VoiceManager::play(std::shared_ptr<SoundBuffer> buffer, float gain) {
   std::lock_guard lock(_mutex);
-  _voices.emplace_back(std::make_unique<Voice>(std::move(buffer)));
+  auto voice = std::make_unique<Voice>(std::move(buffer));
+  voice->setGain(gain);
+  _voices.emplace_back(std::move(voice));
 }
 
 void VoiceManager::mix(float* output, uint32_t frameCount, uint32_t channels) {
